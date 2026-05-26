@@ -10,6 +10,8 @@ The source file contains a recursive template for choosing a non-empty subset of
 - A base state is valid only when the modulo is 0 and at least one element was selected.
 - The present file is a skeleton: solve() does not yet parse the full input or call the recursive function.
 
+<img width="4096" height="2802" alt="42774" src="https://github.com/user-attachments/assets/efb4ef77-4ab4-4761-83d5-b6dfcece62f3" />
+
 ## Visual Representation
 ~~~mermaid
 flowchart TD
