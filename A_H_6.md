@@ -23,6 +23,385 @@ flowchart LR
     E --> B
 ~~~
 
+
+# Intuition
+
+## Observation
+
+We need to find:
+
+> The maximum length substring that is made by repeating another substring consecutively.
+
+Example:
+
+```text
+abab
+```
+
+Here:
+
+```text
+ab + ab
+```
+
+So answer is:
+
+```text
+4
+```
+
+because the repeated substring length is `2`
+and total repeated block length becomes:
+
+\[
+2 \times 2 = 4
+\]
+
+---
+
+# Core Idea
+
+This is a **sliding window style comparison problem**.
+
+We try all possible half lengths:
+
+\[
+l = \frac{n}{2}, \frac{n}{2}-1, \dots, 1
+\]
+
+Where:
+
+- `l` = size of one half
+
+Then we compare:
+
+```text
+s[i]
+with
+s[i + l]
+```
+
+for all possible positions.
+
+---
+
+# Why Compare `i` and `i+l` ?
+
+Because we want to check whether:
+
+```text
+[first half]
+==
+[second half]
+```
+
+Example:
+
+```text
+a b a b
+0 1 2 3
+```
+
+For:
+
+\[
+l = 2
+\]
+
+Compare:
+
+```text
+index 0 with index 2
+a == a
+```
+
+```text
+index 1 with index 3
+b == b
+```
+
+Both matched.
+
+That means:
+
+```text
+ab == ab
+```
+
+So:
+
+```text
+abab
+```
+
+is a repeated substring.
+
+---
+
+# Consecutive Match Count
+
+We maintain:
+
+```text
+consecutive_count
+```
+
+Whenever:
+
+```text
+s[i] == s[i+l]
+```
+
+increase count.
+
+Otherwise reset it to `0`.
+
+---
+
+# Important Observation
+
+If:
+
+```text
+consecutive_count == l
+```
+
+then we found:
+
+```text
+[l sized substring]
+repeated twice consecutively
+```
+
+which means total valid substring length becomes:
+
+\[
+2 \times l
+\]
+
+So immediately return:
+
+\[
+2l
+\]
+
+---
+
+# Why Return `2*l` ?
+
+Because:
+
+- `l` only represents HALF of the repeated block
+- We are matching:
+
+```text
+left window
+with
+right window
+```
+
+So total repeated substring size becomes:
+
+```text
+left half + right half
+```
+
+\[
+l + l = 2l
+\]
+
+---
+
+# Algorithm
+
+## Step 1
+
+Start from:
+
+\[
+l = \frac{n}{2}
+\]
+
+because repeated substring must contain at least 2 equal halves.
+
+---
+
+## Step 2
+
+Compare:
+
+```text
+s[i]
+with
+s[i+l]
+```
+
+for all valid indices.
+
+---
+
+## Step 3
+
+If characters match:
+
+```text
+consecutive_count++
+```
+
+Else:
+
+```text
+consecutive_count = 0
+```
+
+---
+
+## Step 4
+
+If:
+
+```text
+consecutive_count == l
+```
+
+return:
+
+\[
+2l
+\]
+
+---
+
+## Step 5
+
+If not found:
+
+```text
+l--
+```
+
+and repeat.
+
+---
+
+# Pseudocode
+
+```text
+for l from n/2 down to 1:
+
+    consecutive_count = 0
+
+    for i from 0 to n-l-1:
+
+        if s[i] == s[i+l]:
+
+            consecutive_count++
+
+        else:
+
+            consecutive_count = 0
+
+        if consecutive_count == l:
+
+            return 2*l
+
+return 0
+```
+
+---
+
+# Dry Run
+
+String:
+
+```text
+abab
+```
+
+Length:
+
+```text
+n = 4
+```
+
+---
+
+# Try `l = 2`
+
+We compare:
+
+```text
+s[i]
+with
+s[i+2]
+```
+
+---
+
+## i = 0
+
+Compare:
+
+```text
+s[0] = a
+s[2] = a
+```
+
+Match.
+
+```text
+consecutive_count = 1
+```
+
+---
+
+## i = 1
+
+Compare:
+
+```text
+s[1] = b
+s[3] = b
+```
+
+Match again.
+
+```text
+consecutive_count = 2
+```
+
+Now:
+
+```text
+consecutive_count == l
+```
+
+So repeated substring found.
+
+Return:
+
+\[
+2 \times l
+=
+2 \times 2
+=
+4
+\]
+
+---
+
+# Final Answer
+
+```text
+4
+```
+
+because:
+
+```text
+abab = ab + ab
+```
+
 ## Explanation
 The code checks every half length and scans the string for each, so the time complexity is O(n^2) and memory is O(1).
 
