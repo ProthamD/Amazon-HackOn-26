@@ -23,6 +23,16 @@ flowchart TD
     G --> B
 ~~~
 
+## intuition:
+// Here is the step-by-step strategy:
+// Store the frequency of every number in the array.
+// Continually extract the maximum key from the frequency map.
+// Check its frequency:
+// If count == 1: Increment the answer tally. Calculate half = max_value / 2. If half > 0, add it to the frequency map (incrementing its count).
+// If count > 1: Do nothing to the answer tally. Do not add anything back. Simply drop it.
+// Delete the processed maximum key from the map entirely.
+// Repeat until the map is empty.
+
 ## Explanation
 Each map operation costs O(log K), where K is the number of distinct active values. The number of rounds is bounded by removals plus generated halves.
 
