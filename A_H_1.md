@@ -32,11 +32,11 @@ The main idea is to keep the state small enough that every decision can be check
 
 (formatted by me)
 My-Intuition: • **Ascending pair exists:** Among all `i` where `s[i] < s[i+1]`, pick the one with the largest `s[i]` and replace with 'E' — that position is already subtracting, flipping the biggest loss to +10000
- • **Monotone decreasing:** No ascending pair exists, everything already adds — try replacing every position with 'E' and pick best, since left neighbour penalty varies per position, no simple greedy works
- • **All same characters:** Falls into monotone decreasing case, replacing index 0 is best since no left neighbour penalty exists there
- • **Already contains 'E':** Same greedy applies naturally, 'E' positions skipped in try-all since replacing 'E' with 'E' changes nothing
- • **Single character:** Always replace with 'E' → 10000
- • **All 'E's:** No replacement helps → n × 10000
+1. **Monotone decreasing:** No ascending pair exists, everything already adds — try replacing every position with 'E' and pick best, since left neighbour penalty varies per position, no simple greedy works
+2. **All same characters:** Falls into monotone decreasing case, replacing index 0 is best since no left neighbour penalty exists there
+3. **Already contains 'E':** Same greedy applies naturally, 'E' positions skipped in try-all since replacing 'E' with 'E' changes nothing
+4. **Single character:** Always replace with 'E' → 10000
+5. **All 'E's:** No replacement helps → n × 10000
 
 
 ## Code
