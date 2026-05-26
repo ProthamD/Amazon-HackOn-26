@@ -25,10 +25,51 @@ flowchart TD
     N --> L
 ~~~
 
+<img width="4096" height="2574" alt="42767" src="https://github.com/user-attachments/assets/1d885d61-addb-4782-9e8c-ed7fb0215bea" />
+
+
 ## Explanation
 Each loop consumes one level and batches nodes by type, so the simulation is O(height), with O(1) extra memory.
 
 The main idea is to keep the state small enough that every decision can be checked directly. The code follows the transitions described above and prints the best value found for the problem.
+
+intuition formatted by me, modified by Ai:
+ ## Core Intuition
+// total nodes n = a + b + c
+// total edges  = 2a + b
+// but edges = n - 1 always in a tree
+// so: 2a + b = a + b + c - 1
+// →  a - c = -1
+// →  c = a + 1
+// Think of `slots` as **open seats** at each level:
+
+// ```
+ A → fills 1 seat, opens 2 new seats
+ B → fills 1 seat, opens 1 new seat
+ C → fills 1 seat, opens 0 new seats
+    ```
+
+// ---
+## Why `+=`
+ At level with `slots=3, a=1, b=1`:
+
+```
+// [ _ ][ _ ][ _ ]
+
+// place A:  [ A ][ _ ][ _ ]   next_slots = 2
+//             ↓↓
+// place B:  [ A ][ B ][ _ ]   next_slots += 1 = 3
+//                 ↓
+// place C:  [ A ][ B ][ C ]   next_slots stays 3
+```
+
+Next level has **3 slots = 2 from A + 1 from B**, both contributed together, so we need `+=` to accumulate both. If it was `=`:
+```
+// next_slots = use_b = 1   ← lost A's 2 slots!
+```
+
+## That's it — `+=` just means **A and B both contribute to next level's slots simultaneously**.
+
 
 ## Code
 ~~~~cpp
