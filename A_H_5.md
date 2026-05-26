@@ -151,7 +151,7 @@ dp[u][su] \times dp[v][sv]
 
 # Pseudocode
 
-```text
+
 function dfs(u, parent):
 
     sz[u] = 1
@@ -223,8 +223,6 @@ The main idea is to keep the state small enough that every decision can be check
 
 
 
-## Code
-~~~~cpp
 
 
 //intuition:
@@ -258,7 +256,9 @@ The main idea is to keep the state small enough that every decision can be check
 //         dp[u] = next_dp   // Update u's states with the results of merging child v
 //         sz[u] = sz[u] + sz[v] // Update the processed size
 // 3. Dry RunLet's trace your exact input: a straight line 1 - 2 - 3 - 4 - 5.We will process from the bottom up. Assume node 1 is the root.Node 5 (Leaf): * sz[5] = 1, dp[5][1] = 1.Node 4 (Merges child 5): * Before merging: dp[4][1] = 1.max_cut_5 = (size 1) * dp[5][1] = 1 * 1 = 1.If we cut: next_dp[1] = dp[4][1] * max_cut_5 = 1.If we keep: next_dp[1+1] = dp[4][1] * dp[5][1] = 1.Result: dp[4] = {1: 1, 2: 1}, sz[4] = 2.Node 3 (Merges child 4):Before merging: dp[3][1] = 1.max_cut_4 = max( 1dp[4][1], 2dp[4][2] ) = max(1, 2) = 2.If we cut: next_dp[1] = dp[3][1] * 2 = 2.If we keep: * su=1 + sv=1 -> next_dp[2] = 1 * 1 = 1.su=1 + sv=2 -> next_dp[3] = 1 * 1 = 1.Result: dp[3] = {1: 2, 2: 1, 3: 1}, sz[3] = 3.Node 2 (Merges child 3):Before merging: dp[2][1] = 1.max_cut_3 = max( 12, 21, 3*1 ) = max(2, 2, 3) = 3.If we cut: next_dp[1] = dp[2][1] * 3 = 3.If we keep: merging sizes 1, 2, and 3 yields sizes 2, 3, and 4, all with product 1.Result: dp[2] = {1: 3, 2: 2, 3: 1, 4: 1}, sz[2] = 4.Node 1 (Merges child 2):Before merging: dp[1][1] = 1.max_cut_2 = max( 13, 22, 31, 41 ) = max(3, 4, 3, 4) = 4.If we cut: next_dp[1] = 1 * 4 = 4.If we keep: merging sizes 1, 2, 3, 4 yields sizes 2, 3, 4, 5 with values 3, 2, 1, 1.Result: dp[1] = {1: 4, 2: 3, 3: 2, 4: 1, 5: 1}.Final Answer Calculation at Root 1:We must multiply the final remaining component size s by its stored severed product.$$\max_{s} (s \times dp[1][s])$$Checking all states in dp[1]:$1 \times dp[1][1] = 1 \times 4 = 4$$2 \times dp[1][2] = 2 \times 3 = 6$$3 \times dp[1][3] = 3 \times 2 = 6$$4 \times dp[1][4] = 4 \times 1 = 4$$5 \times dp[1][5] = 5 \times 1 = 5$The maximum is 6. This perfectly maps to your observation (cutting edge 3-4 leaves sizes 3 and 2, $3 \times 2 = 6$).
-
+```
+## code:
+```
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -343,3 +343,4 @@ int main() {
     return 0;
 }
 ~~~~
+```
