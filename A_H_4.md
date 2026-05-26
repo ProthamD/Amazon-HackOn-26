@@ -126,7 +126,7 @@ dp(0, 2, none)
 // Answer = min(576, 577) = 576 ✅
 ```
 
-
+```
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -165,3 +165,4 @@ int main() {
     return 0;
 }
 ~~~~
+```
