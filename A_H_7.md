@@ -1,7 +1,15 @@
 # Problem 7 - Unique Maximum Number Game
 
 ## Question
-Given a multiset of numbers, repeatedly inspect the current maximum. If it is unique, count it, remove it, and insert floor(max / 2) if non-zero. If it appears multiple times, remove all copies. Output how many unique maximums were counted.
+Problem 7: Bob has a collection of numbers and he loves to play a game with them. In this game, Bob counts the unique maximum numbers from his collection based on the following rules: - A number is considered unique if it is the maximum number in the collection and it does not repeat.
+
+-If Bob finds a unique maximum number, he counts it, removes it from the collection, and then adds half of that number back into the collection (if the half is not zero).(If its odd then just the floor part)
+
+-If the maximum number is not unique (it repeats) , Bob removes all occurrences of that number from the collection.
+
+First Line contains a single integer N representing the size of the array. The second line contains N integers representing elements of the array. Output Format Output a single integer representing the count of unique numbers that Bob will count by the end of the game.
+
+Obs: We just did simulation on this but still turns out there maybe some edge cases as only partially i was getting the test cases correct. what might be the edge cases for this problem? (negative numbers were not in the sample test cases though i dont know if that caused the problem also maybe something to do with 0 as the number )
 
 ## Intuition
 - A sorted frequency map lets us repeatedly access the current maximum.
@@ -24,14 +32,14 @@ flowchart TD
 ~~~
 
 ## intuition:
-// Here is the step-by-step strategy:
-// Store the frequency of every number in the array.
-// Continually extract the maximum key from the frequency map.
-// Check its frequency:
-// If count == 1: Increment the answer tally. Calculate half = max_value / 2. If half > 0, add it to the frequency map (incrementing its count).
-// If count > 1: Do nothing to the answer tally. Do not add anything back. Simply drop it.
-// Delete the processed maximum key from the map entirely.
-// Repeat until the map is empty.
+1. Here is the step-by-step strategy:
+2. Store the frequency of every number in the array.
+3. Continually extract the maximum key from the frequency map.
+4. Check its frequency:
+5. If count == 1: Increment the answer tally. Calculate half = max_value / 2. If half > 0, add it to the frequency map (incrementing its count).
+6. If count > 1: Do nothing to the answer tally. Do not add anything back. Simply drop it.
+7. Delete the processed maximum key from the map entirely.
+8. Repeat until the map is empty.
 
 ## Explanation
 Each map operation costs O(log K), where K is the number of distinct active values. The number of rounds is bounded by removals plus generated halves.
