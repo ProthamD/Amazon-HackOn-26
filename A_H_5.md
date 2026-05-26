@@ -25,15 +25,183 @@ Input:
 
 4 5
 
-Output: 6 cut it from the 3-4 edge we have subtrees 1-2-3 and 4-5 so product is 6
+Output: 6 
 
 ## Intuition
-- Although the first source comment mentions a number game, the implemented algorithm and detailed comment solve a tree component product problem.
-- For each node u, dp[u][s] stores the best product from fully separated components inside u's processed subtree while the component containing u has size s.
-- For every child v, there are two choices: cut the edge to v or keep it.
-- Cutting seals v as an independent component and multiplies by the best possible size * dp[v][size].
-- Keeping merges v's active component into u, increasing the active size from su to su + sv.
-- At the root, the last active component must also be counted, so the answer is max over s of s * dp[root][s].
+# Intuition
+
+## 1. The Intuition & DP State
+
+To solve this, we use **Depth-First Search (DFS)** and process the tree **bottom-up**.
+
+At every node, we decide for each child:
+
+- **Cut the edge**
+- **Keep the edge**
+
+If we **keep** the edge, the child’s connected component merges into the parent’s component.
+
+That means the size of the parent’s active component keeps changing dynamically, so we must track it carefully.
+
+---
+
+# DP State
+
+We define:
+
+\[
+dp[u][s]
+\]
+
+Where:
+
+- `u` = current node
+- `s` = size of the connected component currently containing `u`
+
+### Meaning
+
+`dp[u][s]` stores:
+
+> The maximum product of sizes of all completely separated components inside the subtree of `u`,
+> while the active component containing `u` has size `s`.
+
+The component containing `u` is still “open” because it may later connect upward to the parent.
+
+---
+
+# Extra Variable
+
+## `sz[u]`
+
+\[
+sz[u]
+\]
+
+Stores:
+
+> Total processed subtree size of node `u`
+
+Used to limit DP loops efficiently.
+
+---
+
+# Transition Logic
+
+Suppose we are processing child `v` of node `u`.
+
+For every:
+
+- active size `su` of `u`
+- active size `sv` of `v`
+
+We have **2 choices**.
+
+---
+
+# Choice 1: Cut Edge `(u,v)`
+
+Then `v` becomes a fully separated component.
+
+Its contribution becomes:
+
+\[
+sv \times dp[v][sv]
+\]
+
+We take the best possible cut value:
+
+\[
+max\_cut_v = \max(sv \times dp[v][sv])
+\]
+
+The active component size of `u` remains unchanged.
+
+Transition:
+
+\[
+next\_dp[su]
+=
+\max(next\_dp[su],\ dp[u][su] \times max\_cut_v)
+\]
+
+---
+
+# Choice 2: Keep Edge `(u,v)`
+
+Now the component of `v` merges into `u`.
+
+New active size:
+
+\[
+su + sv
+\]
+
+Transition:
+
+\[
+next\_dp[su+sv]
+=
+\max(
+next\_dp[su+sv],
+dp[u][su] \times dp[v][sv]
+)
+\]
+
+---
+
+# Pseudocode
+
+```text
+function dfs(u, parent):
+
+    sz[u] = 1
+    dp[u][1] = 1
+
+    for each neighbor v of u:
+
+        if v == parent:
+            continue
+
+        dfs(v, u)
+
+        create next_dp array of size (sz[u] + sz[v] + 1)
+        initialize with 0
+
+        max_cut_v = 0
+
+        for sv from 1 to sz[v]:
+            max_cut_v =
+                max(max_cut_v, sv * dp[v][sv])
+
+        for su from 1 to sz[u]:
+
+            if dp[u][su] == 0:
+                continue
+
+            # OPTION 1 -> CUT EDGE
+
+            next_dp[su] =
+                max(
+                    next_dp[su],
+                    dp[u][su] * max_cut_v
+                )
+
+            # OPTION 2 -> KEEP EDGE
+
+            for sv from 1 to sz[v]:
+
+                if dp[v][sv] == 0:
+                    continue
+
+                next_dp[su + sv] =
+                    max(
+                        next_dp[su + sv],
+                        dp[u][su] * dp[v][sv]
+                    )
+
+        dp[u] = next_dp
+
+        sz[u] += sz[v]
 
 ## Visual Representation
 ~~~mermaid
@@ -53,15 +221,11 @@ For each edge, combinations of component sizes are considered. The worst-case ti
 
 The main idea is to keep the state small enough that every decision can be checked directly. The code follows the transitions described above and prints the best value found for the problem.
 
+
+
 ## Code
 ~~~~cpp
-// Problem 7: Bob has a collection of numbers and he loves to play a game with them. In this game, Bob counts the unique maximum numbers from his collection based on the following rules: - A number is considered unique if it is the maximum number in the collection and it does not repeat.
 
-// -If Bob finds a unique maximum number, he counts it, removes it from the collection, and then adds half of that number back into the collection (if the half is not zero).(If its odd then just the floor part)
-
-// -If the maximum number is not unique (it repeats) , Bob removes all occurrences of that number from the collection.
-
-// First Line contains a single integer N representing the size of the array. The second line contains N integers representing elements of the array. Output Format Output a single integer representing the count of unique numbers that Bob will count by the end of the game.
 
 //intuition:
 // 1. The Intuition & DP StateTo solve this, we will use Depth-First Search (DFS) to traverse the tree from the bottom up. As we process each node, we need to make decisions about its connection to its children: do we cut the edge, or do we keep it?Because keeping an edge means the child's component merges with the parent's component, the size of the parent's active component keeps changing. We must track this size to know what to multiply later.The DP Array:We define our state using a 2D array: $dp[u][s]$.u: The current node we are looking at.s: The current size of the connected component containing node u.What it stores: The maximum product of the sizes of all completely severed subtrees within u's domain. (It does not yet include the size s of u's active component, because we haven't decided where to cut u from the rest of the tree above it).The Variables:sz[u]: The total number of nodes in the subtree of u we have processed so far. We use this to limit our loops so we don't do unnecessary work.max_cut_v: If we decide to cut the edge to a child v, we look at all possible sizes sv of v's component, calculate $sv \times dp[v][sv]$, and pick the maximum.The Transitions:When we are at node u and we evaluate a child v, we look at all possible active sizes for u (su) and v (sv). We have two choices:Cut the edge (u, v): We seal off v's component. It contributes sv to our overall product. u's active size (su) remains unchanged.Keep the edge (u, v): The active component of v merges with u. The new active size for u becomes su + sv. The severed subtrees already processed in u and v are combined by multiplying their products.2. PseudocodePlaintextfunction dfs(u, parent):
