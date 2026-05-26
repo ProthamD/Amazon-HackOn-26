@@ -1,13 +1,17 @@
+
 # Problem 1 - Maximum Salary After One Office Change
 
 ## Question
 Given a work schedule string made of offices A, B, C, D, and E with values 1, 10, 100, 1000, and 10000, compute the salary by adding a character value if no higher office appears after it and subtracting it otherwise. Change at most one day to another office to maximize the final salary.
 
-## Intuition
+## Intuition(formatted by AI)(same thing like below)
 - Salary contribution depends on whether a higher priority office appears to the right.
 - The current code tests replacing positions with E because E is the largest value and usually gives the strongest improvement.
 - When the sequence has an ascending pair, the code picks a high-value losing position and turns it into E.
 - When the string is monotone non-increasing, every character already adds, so the code tries every possible replacement with E and keeps the best score.
+
+  
+<img width="1272" height="950" alt="42993" src="https://github.com/user-attachments/assets/7dd41702-4d60-410c-adfe-6b1e9272dc3f" />
 
 ## Visual Representation
 ~~~mermaid
@@ -25,6 +29,15 @@ flowchart LR
 The salary recomputation is O(n). In the monotone case, trying every index makes the current implementation O(n^2), while the greedy ascending branch is O(n).
 
 The main idea is to keep the state small enough that every decision can be checked directly. The code follows the transitions described above and prints the best value found for the problem.
+
+(formatted by me)
+My-Intuition: • **Ascending pair exists:** Among all `i` where `s[i] < s[i+1]`, pick the one with the largest `s[i]` and replace with 'E' — that position is already subtracting, flipping the biggest loss to +10000
+ • **Monotone decreasing:** No ascending pair exists, everything already adds — try replacing every position with 'E' and pick best, since left neighbour penalty varies per position, no simple greedy works
+ • **All same characters:** Falls into monotone decreasing case, replacing index 0 is best since no left neighbour penalty exists there
+ • **Already contains 'E':** Same greedy applies naturally, 'E' positions skipped in try-all since replacing 'E' with 'E' changes nothing
+ • **Single character:** Always replace with 'E' → 10000
+ • **All 'E's:** No replacement helps → n × 10000
+
 
 ## Code
 ~~~~cpp
