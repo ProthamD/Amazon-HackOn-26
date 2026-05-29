@@ -1,11 +1,4 @@
 # Question:
-
-Here is the clean, official version of the problem description, complete with the input/output format, constraints, and verified test cases so you can test your code.
-
----
-
-## **Problem: Equalizing the Array Ends**
-
 ### **Problem Statement**
 
 Given an array `nums` containing $N$ distinct integers, and an integer $K$. You can perform the following operation any number of times:
@@ -123,6 +116,7 @@ Now `nums[0] == nums[4]`. Total operations = 2.
 
 * **Explanation:** We need to cover $N - 1 = 5$ positions. Each step gives us $K - 1 = 2$ positions. $\lceil 5 / 2 \rceil = 3$ operations.
 
+<img width="4096" height="3146" alt="43569" src="https://github.com/user-attachments/assets/c9908240-1d4b-48e7-b861-bb45b9c203f7" />
 
 # Intuition:
  Basically We need to Populate it with Maximum characters from start to end.
