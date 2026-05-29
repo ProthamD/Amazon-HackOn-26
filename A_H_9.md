@@ -124,7 +124,7 @@ Now `nums[0] == nums[4]`. Total operations = 2.
  Doing that only have a approach of spreading window in anyside to cover up K-1 size
 
  ### Why K-1, when K is given?
-### ans. The Question particularly mentioned that you can only replace if maximum element is in you window , so we are assuming we are filling up till K as Kth element needs to be included in next iterations window
+### ans. The Question particularly mentioned that you can only replace if maximum element is in your window , so we are assuming we are filling up till K as Kth element needs to be included in next iterations window
 
 ## Basically We are finding Segements If you have grasped what the intuition or question is saying
 
